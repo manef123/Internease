@@ -1,0 +1,77 @@
+ui-uri: http://localhost:4200
+
+spring:
+  application:
+    name: api-gateway
+#  web:
+#    cors:
+#      allowed-origins: "http://localhost:4200"
+#      allowed-methods: GET, POST, PUT, DELETE
+#      allowed-headers: "*"
+#      allow-credentials: true
+
+
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+          corsConfigurations:
+            '[/**]':
+              allowedOrigins: "http://localhost:4200"
+              allowedHeaders: "*"
+              allowedMethods: "*"
+
+      routes:
+        ## User
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        ## Formation
+        - id: formation
+          uri: lb://formation
+          predicates:
+            - Path=/formation/**
+          filters:
+            - StripPrefix=1
+        ## ServiceEq
+        - id: serviceEq
+          uri: lb://serviceEq
+          predicates:
+            - Path=/serviceEq/**
+          filters:
+            - StripPrefix=1
+        ## Competence
+        - id: competence
+          uri: lb://competance
+          predicates:
+            - Path=/competance/**
+          filters:
+            - StripPrefix=1
+        ## JobPosition
+        - id: jobposition
+          uri: lb://jobposition
+          predicates:
+            - Path=/jobposition/**
+          filters:
+            - StripPrefix=1
+        ## Evaluation
+        - id: evaluation
+          uri: lb://evaluation
+          predicates:
+            - Path=/evaluation/**
+          filters:
+            - StripPrefix=1
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+
